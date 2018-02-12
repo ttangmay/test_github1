@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>E-commerce Application</title>
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+
+	</head>
+
+	<body>
+
+		<div id="app">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 well well-sm">
+						<div class="text-right">
+							<span>
+								{{cart.items.length | currency}}
+								<span>Type</span> in cart, total {{cartTotal | currency}}
+							</span>
+							<button class="btn btn-primary" v-if="!isShowingCart" @click="isShowingCart = true">
+								View Cart
+							</button>
+
+							<button class="btn btn-primary" v-else @click="isShowingCart = false">
+								Shopping
+							</button>
+						</div>
+					</div>
+				</div><!-- row -->
+
+				<div class="row" v-if="!isShowingCart">
+					<div class="col-md-12 well well-sm">
+						<div class="col-md-1">
+							<label>Filters :</label>
+						</div>
+						<div class="col-md-10">
+							<select class="form-control" v-model="filterListing">
+								<option value="">All</option>
+								<option value="Laptop">Laptop</option>
+								<option value="Mobile">Mobile</option>
+							</select>
+						</div>
+					</div>
+				</div><!-- row -->
+
+				<div class="row" v-if="!isShowingCart">
+					<div class="col-md-4" v-for="product in filterProducts">
+
+						<div class="thumbnail">
+							<img v-bind:src="product.image" class="group list-group-image img-responsive">
+							<div class="caption">
+								<h4 class="group list-group-item-heading">
+
+									{{product.name}}
+								</h4>
+								<p class="group list-group-item-text">
+									{{product.description}}
+								</p>
+
+								<div class="row">
+									<div class="col-md-4">
+										<p class="lead">{{product.price}}</p>
+									</div>
+									<div class="col-sm-8">
+										<div class="text-right">
+											{{product.inStock}} in stock
+											<button class="btn btn-success" v-if="product.inStock > 0" @click="addProductToCart(product)">
+												Add to cart
+											</button>
+										</div>
+									</div>								
+								</div><!-- row -->
+							</div>
+						</div>
+					</div>
+				</div><!-- row -->
+
+				<div class="row" v-else>
+					<div class="col-md-12">
+						<h1>Cart</h1>
+						<table class="table table-striped" v-if="cart.items.length > 0">
+							<thead>
+								<tr>
+									<th>Product</th>
+									<th>Quantity</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="item in cart.items">
+									<td>{{item.product.name}}</td>
+									<td>
+										<button class="btn btn-success" @click="increase(item)">
+											+
+										</button>
+										<span>{{item.quantity}}</span>
+										<button class="btn btn-danger" @click="decrease(item)">
+											-
+										</button>
+									</td>
+									<td>{{item.quantity*item.product.price}}</td>
+								</tr>
+								<tr>
+									<td colspan="2"  class="text-right">
+										<strong>Subtotal</strong>
+									</td>
+									<td>{{cartTotal | currency}}</td>
+								</tr>
+								<tr>
+									<td colspan="2"  class="text-right">
+										<strong>Taxes</strong>
+									</td>
+									<td>{{cartTaxes | currency}}</td>
+								</tr>
+								<tr>
+									<td colspan="2"  class="text-right">
+										<strong>Grand Total</strong>
+									</td>
+									<td>{{ cartTotal + cartTaxes | currency}}</td>
+								</tr>
+								
+							</tbody>
+						</table>
+						<p v-else>
+							Cart Empty
+						</p>
+					</div>
+				</div><!-- row -->
+
+			</div><!-- container -->
+		</div>
+		
+		<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+		<script src="js/vue.js"></script>
+		<script src="js/app.js"></script>
+		
+	</body>
+</html>
